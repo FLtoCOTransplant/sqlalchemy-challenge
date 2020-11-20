@@ -1,8 +1,6 @@
   
 from flask import Flask, jsonify
 import numpy as np
-
-
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
@@ -25,7 +23,7 @@ app = Flask(__name__)
 # Flask routes
 
 @app.route("/")
-def welcome():
+def Home():
     return(
         f"Welcome to your historical Hawaii Weather homepage"
         f"You can browse:<br/>"
@@ -35,3 +33,20 @@ def welcome():
         f"/api/v1.0/[start_date format:yyyy-mm-dd]<br/>"
         f"/api/v1.0/[end_date format:yyyy-mm-dd]<br/>"
     )
+
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+    # Link from python to the sqlite db
+    session = Session(engine)
+
+    """Return all precipitation data"""
+    # Query for all precipitation data
+    precip_data = session.query(Measurement.date, Measurement.prcp).\
+        order_by(Measurement.date).all()
+
+    # Convert the results to a dictionary and print JSON object
+    return jsonify(precip_data)
+
+    session.close()
+if __name__ == "__main__":
+    app.run(debug=True)

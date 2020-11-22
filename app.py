@@ -71,7 +71,30 @@ def stations():
     stations = list(np.ravel(stations))
 
     # Print JSON object
-    return jsonify(stations)    
+    return jsonify(stations)
 
+@app.route("/api/v1.0/tobs")
+def tobs():
+    # Link from python to the sqlite db
+    session = Session(engine)
+
+    """Return all TOBs"""
+    # Query all tobs
+
+    station_obs = session.query(Measurement.date,  Measurement.tobs).\
+                filter(Measurement.date >= '2016-08-23').\
+                    order_by(Measurement.date).all()
+
+    session.close()
+
+    # Convert list of tuples into normal list
+    tobs = list(np.ravel(station_obs))
+
+    # Convert the list to Dictionary
+    tobs = {tobs[i]: tobs[i + 1] for i in range(0, len(tobs), 2)} 
+
+    return jsonify(tobs)
+
+    
 if __name__ == "__main__":
     app.run(debug=True)

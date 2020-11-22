@@ -20,7 +20,7 @@ can have on the environment so utilizing this data without further refinement ma
 
 conclusions for their vacation destination.
 
-![](images/Precipitation analysis.jpg)
+![](images/Precipitation_analysis.jpg)
 
 Looking at this data, February might be a great time to go but then so might September.  Overall it looks
 
@@ -30,7 +30,7 @@ Temperature seems to be fairly consistent with most days ranging between 70 and 
 
 Take me there!
 
-![](images/Frequency analysis.jpg)
+![](images/Frequency_analysis.jpg)
 
 For this analysis there is a jupyter notebook and a visual studio app to review data in pandas and json formats
 

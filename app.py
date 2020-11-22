@@ -100,7 +100,7 @@ def data_start_date(start_date):
     # Link from python to the sqlite db
     session = Session(engine)
 
-    """Return min, avg and max tobs for a specific vacation start date"""
+    """Return min, avg and max tobs for the start date of the vacation"""
     # Query all tobs
 
     vac_temp_start = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
@@ -108,16 +108,40 @@ def data_start_date(start_date):
 
     session.close()
     
-    # Create a dictionary from the row data and append to a list of start_date_tobs
-    vac_temp_tobs = []
+    # Dictionary from the row data and append to a list of vacaction temp obs
+    vac_temp_s_tobs = []
     for min, avg, max in vac_temp_start:
-        vac_temp_dict = {}
-        vac_temp_dict["min_temp"] = min
-        vac_temp_dict["avg_temp"] = avg
-        vac_temp_dict["max_temp"] = max
-        vac_temp_tobs.append(vac_temp_dict)
+        vac_temp_s_dict = {}
+        vac_temp_s_dict["min_temp"] = min
+        vac_temp_s_dict["avg_temp"] = avg
+        vac_temp_s_dict["max_temp"] = max
+        vac_temp_s_tobs.append(vac_temp_s_dict)
 
-    return jsonify(vac_temp_tobs) 
+    return jsonify(vac_temp_s_tobs)
+
+@app.route("/api/v1.0/<start_date>/<end_date>")
+def data_start_end_date(start_date, end_date):
+    # Link from python to the sqlite db
+    session = Session(engine)
+
+    """Return min, avg and max tobs for the end date of the vacation"""
+    # Query all tobs
+
+    vac_temp_end = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+                filter(Measurement.date >= start_date).filter(Measurement.date <= '2012-03-05').all()
+
+    session.close()
+    
+    # Dictionary from the row data and append to a list of vacaction temp obs
+    vac_temp_e_tobs = []
+    for min, avg, max in results:
+        vac_temp_e_dict = {}
+        vac_temp_e_dict["min_temp"] = min
+        vac_temp_e_dict["avg_temp"] = avg
+        vac_temp_e_dict["max_temp"] = max
+        vac_temp_e_tobs.append(vac_temp_e_dict) 
+    
+    return jsonify(vac_temp_e_tobs)
 
 if __name__ == "__main__":
     app.run(debug=True)

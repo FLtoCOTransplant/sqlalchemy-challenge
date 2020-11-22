@@ -104,7 +104,7 @@ def data_start_date(start_date):
     # Query all tobs
 
     vac_temp_start = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-                filter(Measurement.date >= start_date).all()
+                filter(Measurement.date >= '2012-02-28').all()
 
     session.close()
     
@@ -116,10 +116,8 @@ def data_start_date(start_date):
         vac_temp_dict["avg_temp"] = avg
         vac_temp_dict["max_temp"] = max
         vac_temp_tobs.append(vac_temp_dict)
-    
 
-    
-    return jsonify(start_date_tobs)    
+    return jsonify(vac_temp_tobs) 
 
 if __name__ == "__main__":
     app.run(debug=True)

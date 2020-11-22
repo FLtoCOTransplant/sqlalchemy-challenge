@@ -55,6 +55,23 @@ def precipitation():
     # Convert the results to a dictionary and print JSON object
     return jsonify(precip_all)
 
-    
+@app.route("/api/v1.0/stations")
+def stations():
+    # Link from python to the sqlite db
+    session = Session(engine)
+
+    """Return all Stations"""
+    # Query all Stations
+    stations = session.query(Station.station).\
+                 order_by(Station.station).all()
+
+    session.close()
+
+    # List of tuples into list
+    stations = list(np.ravel(stations))
+
+    # Print JSON object
+    return jsonify(stations)    
+
 if __name__ == "__main__":
     app.run(debug=True)

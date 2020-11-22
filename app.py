@@ -44,9 +44,17 @@ def precipitation():
     precip_data = session.query(Measurement.date, Measurement.prcp).\
         order_by(Measurement.date).all()
 
-    # Convert the results to a dictionary and print JSON object
-    return jsonify(precip_data)
-
     session.close()
+
+     # List of tuples into list
+    precip_all = list(np.ravel(precip_data))
+    
+    # List to Dictionary
+    precip_all = {precip_all[i]: precip_all[i + 1] for i in range(0, len(precip_all), 2)}
+
+    # Convert the results to a dictionary and print JSON object
+    return jsonify(precip_all)
+
+    
 if __name__ == "__main__":
     app.run(debug=True)

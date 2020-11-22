@@ -95,6 +95,31 @@ def tobs():
 
     return jsonify(tobs)
 
+@app.route("/api/v1.0/<start_date>")
+def data_start_date(start_date):
+    # Link from python to the sqlite db
+    session = Session(engine)
+
+    """Return min, avg and max tobs for a specific vacation start date"""
+    # Query all tobs
+
+    vac_temp_start = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+                filter(Measurement.date >= start_date).all()
+
+    session.close()
     
+    # Create a dictionary from the row data and append to a list of start_date_tobs
+    vac_temp_tobs = []
+    for min, avg, max in vac_temp_start:
+        vac_temp_dict = {}
+        vac_temp_dict["min_temp"] = min
+        vac_temp_dict["avg_temp"] = avg
+        vac_temp_dict["max_temp"] = max
+        vac_temp_tobs.append(vac_temp_dict)
+    
+
+    
+    return jsonify(start_date_tobs)    
+
 if __name__ == "__main__":
     app.run(debug=True)
